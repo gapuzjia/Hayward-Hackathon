@@ -26,7 +26,7 @@ export default function HomeScreen() {
 
   return (
     <LinearGradient
-      colors={['#eb7f00', '#225378']} // 🎨 Change these hex codes for your gradient
+      colors={['#eb7f00', '#225378']} 
       style={styles.container}
     >
       <View style={styles.toDoContainer}> 
