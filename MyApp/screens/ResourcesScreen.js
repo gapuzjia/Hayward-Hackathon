@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-export default function AboutScreen() {
+export default function ResourcesScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>ℹ️ About Page</Text>
+      <Text style={styles.text}>📚 Resources Page</Text>
     </View>
   );
 }
