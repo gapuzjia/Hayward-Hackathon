@@ -10,6 +10,7 @@ const FirstRoute = () => (
 );
 
 // Second Route: Rewards Tab content
+//EVERYONE EDIT HERE. EVERYTHING U ADD WILL BE WITHIN THIS CODE BLOCK------------------
 const SecondRoute = () => (
   <View style={styles.scene}>
     <Text style={styles.text}>Earn rewards for completing health tasks!</Text>
