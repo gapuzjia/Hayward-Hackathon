@@ -3,60 +3,74 @@ import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { TabView, TabBar } from 'react-native-tab-view';
 
 // First Route: Your Health Tab content
-const FirstRoute = () => (
-  <View style={styles.scene}>
-    <Text style={styles.text}>Track your health goals here!</Text>
-  </View>
+const YourHealthScreen = ({ isVisible }) => (
+  isVisible ? (
+    <View style={styles.scene}>
+      <Text style={styles.text}>Track your health goals here!</Text>
+    </View>
+  ) : null
 );
 
 // Second Route: Rewards Tab content
-//EVERYONE EDIT HERE. EVERYTHING U ADD WILL BE WITHIN THIS CODE BLOCK------------------
-const SecondRoute = () => (
-  <View style={styles.scene}>
-    <Text style={styles.text}>Earn rewards for completing health tasks!</Text>
-  </View>
+const RewardsScreen = ({ isVisible }) => (
+  isVisible ? (
+    <View style={styles.scene}>
+      <Text style={styles.text}>Earn rewards for completing health tasks!</Text>
+    </View>
+  ) : null
 );
 
 const App = () => {
-  const [index, setIndex] = useState(0); // Active tab index
+  const [index, setIndex] = useState(0);
   const [routes] = useState([
     { key: 'yourhealth', title: 'Your Health' },
     { key: 'rewards', title: 'Rewards' },
   ]);
 
-  // Render the correct scene based on the active tab
   const renderScene = ({ route }) => {
-    switch (route.key) {
-      case 'yourhealth':
-        return <FirstRoute />;
-      case 'rewards':
-        return <SecondRoute />;
-      default:
-        return null;
-    }
+    const isYourHealth = route.key === 'yourhealth';
+    const isRewards = route.key === 'rewards';
+    
+    return (
+      <>
+        <YourHealthScreen isVisible={isYourHealth && index === 0} />
+        <RewardsScreen isVisible={isRewards && index === 1} />
+      </>
+    );
   };
 
   return (
-    <TabView
-      navigationState={{ index, routes }}
-      renderScene={renderScene} // Dynamically render only the active tab
-      onIndexChange={setIndex}
-      initialLayout={{ width: Dimensions.get('window').width }}
-      renderTabBar={(props) => (
-        <TabBar
-          {...props}
-          indicatorStyle={{ backgroundColor: 'orange' }} // Line under active tab
-          style={styles.tabBar}
-          labelStyle={styles.tabLabel}
-        />
-      )}
-    />
+    <View style={styles.container}>
+      <TabView
+        navigationState={{ index, routes }}
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        initialLayout={{ width: Dimensions.get('window').width }}
+        swipeEnabled={true}
+        renderTabBar={(props) => (
+          <TabBar
+            {...props}
+            indicatorStyle={styles.indicator}
+            style={styles.tabBar}
+            renderLabel={({ route, focused }) => (
+              <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold' }}>
+                {route.title}
+              </Text>
+            )}
+          />
+        )}    
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: 35,
+  },
   scene: {
-    flex: 1,  // Ensures the scene takes the full screen height
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f5f5f5',
@@ -67,11 +81,17 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   tabBar: {
-    backgroundColor: '#225378', // Tab bar background color
+    backgroundColor: '#225378', // Background color of the tab bar
   },
   tabLabel: {
-    color: 'white',  // Tab label color
+    fontSize: 16, 
+    fontWeight: 'bold',
+    color: 'black', // Ensure default tab label color is black
+  },
+  indicator: {
+    backgroundColor: 'orange',
   },
 });
+
 
 export default App;
