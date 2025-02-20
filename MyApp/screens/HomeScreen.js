@@ -14,6 +14,7 @@ const YourHealthScreen = ({ isVisible }) => (
 );
 
 // Second Route: Rewards Tab content
+//still tryna make the rewards screen work idk why its not showing
 const RewardsScreen = ({ isVisible }) => (
   isVisible ? (
     <View style={styles.scene}>
