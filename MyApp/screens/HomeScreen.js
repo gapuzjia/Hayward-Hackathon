@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { TabView, TabBar } from 'react-native-tab-view';
 
 // First Route: Your Health Tab content
+//DO ALL CODING HERE!!!!!!!!!!!--------------------------------------------
+//all homescreen content is in this codeblock
 const YourHealthScreen = ({ isVisible }) => (
   isVisible ? (
     <View style={styles.scene}>
