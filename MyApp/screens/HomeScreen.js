@@ -1,110 +1,66 @@
-import React, { useState, useContext } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { PointsContext } from '../App';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+
+// First Screen
+const FirstRoute = () => (
+  <View style={styles.scene}>
+    <Text style={styles.text}>more text?!</Text>
+  </View>
+);
+
+// Second Screen
+const SecondRoute = () => (
+  <View style={styles.scene}>
+    <Text style={styles.text}>text here?</Text>
+  </View>
+);
 
 export default function HomeScreen() {
-  const { points, setPoints } = useContext(PointsContext);
-  const [tasks, setTasks] = useState([
-    { id: '1', text: 'Drink Water 💧', completed: false, points: 10 },
-    { id: '2', text: 'Meditate 🧘', completed: false, points: 15 },
-    { id: '3', text: 'Exercise 💪', completed: false, points: 20 },
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    { key: 'yourhealth', title: 'Your Health' },
+    { key: 'rewards', title: 'Rewards' },
   ]);
 
-  const toggleTask = (id) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === id && !task.completed ? { ...task, completed: true } : task
-      )
-    );
-
-    const completedTask = tasks.find(task => task.id === id);
-    if (completedTask && !completedTask.completed) {
-      setPoints((prevPoints) => prevPoints + completedTask.points);
-    }
-  };
-
   return (
-    <LinearGradient
-      colors={['#eb7f00', '#225378']} 
-      style={styles.container}
-    >
-      <View style={styles.toDoContainer}> 
-        <Text style={styles.header}>Your Daily Health Goals</Text>
-        <FlatList
-          data={tasks}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={[styles.task, item.completed && styles.completedTask]}
-              onPress={() => toggleTask(item.id)}
-              disabled={item.completed}
-            >
-              <Text style={styles.taskText}>{item.text} {item.completed ? '✔️' : ''}</Text>
-              <Text style={styles.pointsText}>+{item.points} pts</Text>
-            </TouchableOpacity>
-          )}
+    <TabView
+      navigationState={{ index, routes }}
+      renderScene={SceneMap({
+        yourhealth: FirstRoute,
+        rewards: SecondRoute,
+      })}
+      onIndexChange={setIndex}
+      initialLayout={{ width: Dimensions.get('window').width }}
+      renderTabBar={(props) => (
+        <TabBar
+          {...props}
+          indicatorStyle={{ backgroundColor: 'orange' }} // Line under active tab
+          style={styles.tabBar}
+          labelStyle={styles.tabLabel}
         />
-        <Text style={styles.totalPoints}>🎯 Total Points: {points}</Text>
-      </View>
-    </LinearGradient>
+      )}
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  scene: {
     flex: 1,
-    padding: 20,
+    justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    backgroundColor: '#f5f5f5',
   },
-  toDoContainer: {
-    backgroundColor: '#225378', // 🌟 Change this to your preferred blue hex code
-    padding: 20,
-    borderRadius: 15,
-    width: '95%',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 4,
-    postion: 'absolute',
-    top: 0,
-    borderWidth: 4,
-    borderColor: '#eb7f00',
-  },
-  header: {
+  text: {
     fontSize: 22,
     fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 10,
-    color: 'white', // Ensure visibility
+    color: '#333',
   },
-  task: {
-    backgroundColor: 'white',
-    padding: 15,
-    marginVertical: 8,
-    borderRadius: 8,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%', // Make tasks stretch across the box
+  tabBar: {
+    backgroundColor: '#225378', // Top Tab Background Color
   },
-  completedTask: {
-    backgroundColor: '#d3f8d3',
-  },
-  taskText: {
-    fontSize: 18,
-  },
-  pointsText: {
-    fontSize: 16,
-    color: '#007AFF',
-  },
-  totalPoints: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginTop: 20,
+  tabLabel: {
     color: 'white',
+    fontSize: 16,
   },
 });
