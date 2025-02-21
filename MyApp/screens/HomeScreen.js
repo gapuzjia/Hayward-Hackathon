@@ -56,7 +56,7 @@ const App = () => {
             indicatorStyle={styles.indicator}
             style={styles.tabBar}
             renderLabel={({ route, focused }) => (
-              <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold' }}>
+              <Text style={{ color: '#000000', fontSize: 16, fontWeight: 'bold' }}>
                 {route.title}
               </Text>
             )}
@@ -79,12 +79,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   text: {
-    fontSize: 22,
+    fontSize: 50,
     fontWeight: 'bold',
     color: '#333',
   },
   tabBar: {
     backgroundColor: '#225378', // Background color of the tab bar
+    opacity: 100,
   },
   tabLabel: {
     fontSize: 16, 
