@@ -8,7 +8,7 @@ import { TabView, TabBar } from 'react-native-tab-view';
 const YourHealthScreen = ({ isVisible }) => (
   isVisible ? (
     <View style={styles.scene}>
-      <Text style={styles.text}>Track your health goals here!</Text>
+      <Text style={styles.text}>Track your health goals here! </Text>
     </View>
   ) : null
 );
