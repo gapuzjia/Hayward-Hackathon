@@ -4,7 +4,7 @@ import { View, Text } from "react-native";
 const Resources = () => {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Resources Screen</Text>
+      <Text>this is Resources Screen</Text>
     </View>
   );
 };

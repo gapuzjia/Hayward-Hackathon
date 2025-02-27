@@ -10,8 +10,9 @@ import {
   User,
   SlidersHorizontal,
 } from "lucide-react-native";
-import MobileProfilePage from "./MobileProfilePage";
+import MobileProfilePage from "./Profile";
 import Explorepage from "./ExplorePage";
+import Resources from "./Resources";
 const bottomTabs = [
   {
     icon: Home,
@@ -20,10 +21,6 @@ const bottomTabs = [
   {
     icon: SlidersHorizontal,
     label: "Resources",
-  },
-  {
-    icon: Plus,
-    label: "Listing",
   },
   {
     icon: MessageCircle,
@@ -52,12 +49,11 @@ const HomestayPage = () => {
         <StatusBar />
 
         <Box className="flex-1">
-          <MobileProfilePage isActive={activeTab === "Profile"} />
-
-          <Explorepage setActiveTab={setActiveTab} activeTab={activeTab} />
-
-          <MobileModeChangeButton />
+          {activeTab === "Profile" && <MobileProfilePage />}
+          {activeTab === "Resources" && <Resources />}
+          {activeTab === "Home" && <Explorepage setActiveTab={setActiveTab} activeTab={activeTab} />}
         </Box>
+
 
         {/* go to MobileBottomTabs file to edit mobile bottom tabs ---------------------------*/}
         <Box className="h-[72px] items-center w-full flex md:hidden border-t border-outline-50">
