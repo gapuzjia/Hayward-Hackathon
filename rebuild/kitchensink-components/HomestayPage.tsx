@@ -13,6 +13,7 @@ import {
 import MobileProfilePage from "./Profile";
 import Explorepage from "./ExplorePage";
 import Resources from "./Resources";
+import ChatBotScreen from "./ChatBotScreen";
 const bottomTabs = [
   {
     icon: Home,
@@ -30,6 +31,10 @@ const bottomTabs = [
   {
     icon: User,
     label: "Profile",
+  },
+  { 
+    icon: User, 
+    label: "Chat Bot" 
   },
 ];
 
@@ -51,6 +56,7 @@ const HomestayPage = () => {
         <Box className="flex-1">
           {activeTab === "Profile" && <MobileProfilePage />}
           {activeTab === "Resources" && <Resources />}
+          {activeTab === "Chat Bot" && <ChatBotScreen />}
           {activeTab === "Home" && <Explorepage setActiveTab={setActiveTab} activeTab={activeTab} />}
         </Box>
 

@@ -19,34 +19,28 @@ const MobileBottomTabs = ({ bottomTabs, activeTab, setActiveTab }: any) => {
               key={tab.label}
               onPress={() => {
                 if (tab.label !== "Listing" && tab.label !== "Filter") {
-                  setActiveTab(tab.label);
-                }
-                if (tab.label === "Listing") {
-                  setModalVisible(true);
+                  setActiveTab(tab.label); // ✅ Ensure tab.label updates activeTab correctly
                 }
               }}
               disabled={tab.disabled}
-              //@ts-ignore
-              opacity={tab.disabled ? 0.5 : 1}
             >
+
 
               <VStack className="items-center">
                 <Icon
                   as={tab.icon}
                   size="lg"
-                  className={`${
-                    activeTab === tab.label
+                  className={`${activeTab === tab.label
                       ? "text-typography-900"
                       : "text-typography-400"
-                  }`}
+                    }`}
                 />
                 <Text
                   size="xs"
-                  className={`${
-                    activeTab === tab.label
+                  className={`${activeTab === tab.label
                       ? "text-typography-900"
                       : "text-typography-400"
-                  }`}
+                    }`}
                 >
                   {tab.label}
                 </Text>
