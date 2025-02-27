@@ -5,14 +5,15 @@ module.exports = function (api) {
       ['babel-preset-expo', { jsxImportSource: 'nativewind' }],
       'nativewind/babel'
     ],
-
-    plugins: [["module-resolver", {
-      root: ["./"],
-
-      alias: {
-        "@": "./",
-        "tailwind.config": "./tailwind.config.js"
-      }
-    }]]
+    plugins: [
+      ["module-resolver", {
+        root: ["./"],
+        alias: {
+          "@": "./",
+          "tailwind.config": "./tailwind.config.js"
+        }
+      }],
+      ["module:react-native-dotenv"] 
+    ]
   };
 };
