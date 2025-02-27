@@ -4,6 +4,7 @@ import ListYourPlaceModal from "./main-content/ListYourPlaceModal";
 import MobileSidebarActionsheet from "./MobileSidebarActionsheet";
 import { ThemeContext } from "@/App";
 
+
 const MobileBottomTabs = ({ bottomTabs, activeTab, setActiveTab }: any) => {
   const { colorMode } = useContext(ThemeContext);
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -23,14 +24,12 @@ const MobileBottomTabs = ({ bottomTabs, activeTab, setActiveTab }: any) => {
                 if (tab.label === "Listing") {
                   setModalVisible(true);
                 }
-                if (tab.label === "Resources") {
-                  setActionsheetVisible(true);
-                }
               }}
               disabled={tab.disabled}
               //@ts-ignore
               opacity={tab.disabled ? 0.5 : 1}
             >
+
               <VStack className="items-center">
                 <Icon
                   as={tab.icon}
