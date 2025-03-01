@@ -14,6 +14,7 @@ import MobileProfilePage from "./Profile";
 import Explorepage from "./ExplorePage";
 import Resources from "./Resources";
 import ChatBotScreen from "./ChatBotScreen";
+import Map from "./Map";
 const bottomTabs = [
   {
     icon: Home,
@@ -24,9 +25,8 @@ const bottomTabs = [
     label: "Resources",
   },
   {
-    icon: MessageCircle,
-    label: "Inbox",
-    disabled: true,
+    icon: SlidersHorizontal,
+    label: "Map",
   },
   {
     icon: User,
@@ -57,6 +57,7 @@ const HomestayPage = () => {
           {activeTab === "Profile" && <MobileProfilePage />}
           {activeTab === "Resources" && <Resources />}
           {activeTab === "Chat Bot" && <ChatBotScreen />}
+          {activeTab === "Map" && <Map/>} 
           {activeTab === "Home" && <Explorepage setActiveTab={setActiveTab} activeTab={activeTab} />}
         </Box>
 
