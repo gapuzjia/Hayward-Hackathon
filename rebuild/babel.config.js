@@ -6,14 +6,14 @@ module.exports = function (api) {
       'nativewind/babel'
     ],
     plugins: [
+      ["module:react-native-dotenv"], // ✅ Move dotenv first
       ["module-resolver", {
         root: ["./"],
         alias: {
           "@": "./",
           "tailwind.config": "./tailwind.config.js"
         }
-      }],
-      ["module:react-native-dotenv"] 
+      }]
     ]
   };
 };
