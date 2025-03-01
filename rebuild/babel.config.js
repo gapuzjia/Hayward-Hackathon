@@ -6,7 +6,7 @@ module.exports = function (api) {
       'nativewind/babel'
     ],
     plugins: [
-      ["module:react-native-dotenv"], // ✅ Move dotenv first
+      ["module:react-native-dotenv"], // ✅ Ensure dotenv loads first
       ["module-resolver", {
         root: ["./"],
         alias: {
