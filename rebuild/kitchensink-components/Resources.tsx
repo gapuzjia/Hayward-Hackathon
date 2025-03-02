@@ -1,9 +1,9 @@
 import React from "react";
 import { View, Text, StyleSheet, ImageBackground } from "react-native";
-
 const Resources = () => {
   return (
     <View style={styles.container}>
+
       {/* First box with local image background */}
       <View style={styles.shadowContainer}>
         <ImageBackground
@@ -58,6 +58,7 @@ const Resources = () => {
             <Text style={styles.text}>Join the Movement</Text>
           </View>
         </ImageBackground>
+
       </View>
     </View>
   );
@@ -66,6 +67,7 @@ const Resources = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+
     justifyContent: "space-evenly",
     alignItems: "center",
     paddingVertical: 20,
@@ -92,6 +94,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     width: "100%",
     height: "100%",
+
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
@@ -100,10 +103,12 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 18,
     fontWeight: "bold",
+
     textAlign: "center",
     textShadowColor: "rgba(0, 0, 0, 0.8)",
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 4,
+
   },
 });
 
