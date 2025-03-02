@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { StatusBar, Platform, View, FlatList, TouchableOpacity } from "react-native";
 import { Box, HStack, Pressable, Text } from "../../components/ui";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { View, FlatList, TouchableOpacity } from "react-native";
 
 // Define valid routes
 type RootStackParamList = {
@@ -32,7 +32,6 @@ const HomestayInformationFold = () => {
       const updatedGoals = prevGoals.map((goal) => {
         if (goal.id === id) {
           goal.isChecked = !goal.isChecked;
-          // Update total points based on the goal's points
           if (goal.isChecked) {
             setTotalPoints((prevTotal) => prevTotal + goal.points);
           } else {
@@ -58,34 +57,34 @@ const HomestayInformationFold = () => {
     </View>
   );
 
-  const renderItem = ({ item }: { item: string }) => (
-    <View style={{ flexDirection: "row", marginBottom: 10 }}>
-      <Text style={{ marginRight: 200, textDecorationLine: 'underline' }}>{item}</Text>
-      <Text>Icon</Text>
-    </View>
-  );
-
   return (
     <Box className="pb-8 px-4 md:px-0">
-      {/* Tabs */}
+      {/* Tabs - Full Width */}
       <Box className="border-b border-outline-50">
-        <HStack space="lg" className="mx-0.5 xl:gap-5 2xl:gap-6 justify-center py-5">
+        <HStack className="flex-row justify-between w-full">
           {tabs.map((tab) => (
             <Pressable
               key={tab.title}
               onPress={() => {
                 if (tab.title === "Rewards") {
-                  navigation.navigate("RewardsScreen"); // Navigate to Rewards screen
+                  navigation.navigate("RewardsScreen");
                 } else {
                   setActiveTab(tab);
                 }
+              }}
+              style={{
+                flex: 1, // Ensures equal width for each tab
+                paddingVertical: 15,
+                alignItems: "center",
+                borderBottomWidth: activeTab.title === tab.title ? 3 : 0, // ✅ Active tab indicator
+                borderBottomColor: activeTab.title === tab.title ? "#2c6e46" : "transparent", // ✅ Blue highlight
               }}
             >
               <Text
                 size="sm"
                 className={`${
-                  activeTab.title === tab.title ? "text-typography-900" : "text-typography-600"
-                } font-medium`}
+                  activeTab.title === tab.title ? "text-typography-900 font-bold" : "text-typography-600"
+                }`}
               >
                 {tab.title}
               </Text>
@@ -93,7 +92,7 @@ const HomestayInformationFold = () => {
           ))}
         </HStack>
       </Box>
-      
+
       {/* Display Tab Content */}
       <Box className="py-5 flex items-center justify-center">
         <Text className="text-lg font-semibold">{activeTab.content}</Text>
@@ -106,13 +105,12 @@ const HomestayInformationFold = () => {
             padding: 10,
             marginTop: 10,
             borderRadius: 8,
-            width: "90%", // Adjust width as needed
-            alignSelf: "center", // Centers the box
-            justifyContent: "center", // Centers the content vertically
+            width: "90%",
+            alignSelf: "center",
+            justifyContent: "center",
           }}
         >
           <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}>Goals</Text>
-          {/* FlatList for the goals */}
           <FlatList
             data={goals}
             renderItem={renderGoalItem}
