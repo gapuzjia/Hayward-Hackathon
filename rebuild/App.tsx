@@ -5,7 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import HomestayPage from "./kitchensink-components/HomestayPage";
 import HomestayInformationFold from "./kitchensink-components/main-content/HomestayInformationFold";
 import RewardsScreen from "./kitchensink-components/main-content/Rewards";
-import Map from "./kitchensink-components/Map"; // ✅ Import Map screen
+import Map from "./kitchensink-components/Map"; 
 import { SafeAreaView, GluestackUIProvider } from "./components/ui";
 import * as Linking from "expo-linking";
 
