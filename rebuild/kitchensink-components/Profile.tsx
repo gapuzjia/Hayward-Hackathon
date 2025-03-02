@@ -38,8 +38,6 @@ const Profile = ({ isActive }: any) => {
         <Divider className="my-2" />
         <PersonalInfoSection />
         <Divider className="my-2" />
-        <HostingSection />
-        <Divider className="my-2" />
         <SupportSection />
         <Divider className="my-2" />
         <LogoutButton

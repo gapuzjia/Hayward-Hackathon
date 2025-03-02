@@ -10,8 +10,19 @@ import HomestayInformationFold from "./kitchensink-components/main-content/Homes
 import RewardsScreen from "./kitchensink-components/main-content/Rewards";
 
 import Map from "./kitchensink-components/Map"; 
-import { SafeAreaView, GluestackUIProvider } from "./components/ui";
 import * as Linking from "expo-linking";
+import { LogBox } from "react-native";
+
+LogBox.ignoreLogs([
+  "VirtualizedLists should never be nested inside plain ScrollViews",
+  "Encountered two children with the same key",
+  "Non-unique keys may cause children to be duplicated", // 🔥 Ignores similar key warnings
+]);
+
+LogBox.ignoreAllLogs(); // ❌ Hides ALL warnings (only use if needed)
+
+
+
 
 
 // ✅ Define Theme Context
@@ -70,14 +81,16 @@ export default function App() {
 const styles = StyleSheet.create({
   header: {
     width: "100%",
-    height: 80,
+    height: 50, // 🔥 Reduce height to make header smaller
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: Platform.OS === "ios" ? 40 : StatusBar.currentHeight, // ✅ Prevents covering status bar
+    backgroundColor: "#FFFFFF", // ✅ Ensures header background is solid
   },
   headerImage: {
-    width: 150,
-    height: 50,
+    width: 120, // 🔥 Reduce logo size if needed
+    height: 40,
     resizeMode: "contain",
   },
 });
+
+

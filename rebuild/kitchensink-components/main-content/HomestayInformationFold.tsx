@@ -3,6 +3,7 @@ import { StatusBar, Platform, View, FlatList, TouchableOpacity } from "react-nat
 import { Box, HStack, Pressable, Text } from "../../components/ui";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { FontAwesome } from "react-native-vector-icons";
 
 // Define valid routes
 type RootStackParamList = {
@@ -18,11 +19,11 @@ const tabs = [
 const HomestayInformationFold = () => {
   const [activeTab, setActiveTab] = React.useState(tabs[0]);
   const [goals, setGoals] = React.useState([
-    { id: "1", goal: "goal 1", isChecked: false, points: 10 },
-    { id: "2", goal: "goal 2", isChecked: false, points: 20 },
-    { id: "3", goal: "goal 3", isChecked: false, points: 15 },
-    { id: "4", goal: "goal 4", isChecked: false, points: 30 },
-    { id: "5", goal: "goal 5", isChecked: false, points: 25 },
+    { id: "1", goal: "Upcycle an old item", isChecked: false, points: 10 },
+    { id: "2", goal: "Sort trash into recyclables and non-recyclables", isChecked: false, points: 20 },
+    { id: "3", goal: "Use a reusable water bottle", isChecked: false, points: 15 },
+    { id: "4", goal: "Carpool with a friend", isChecked: false, points: 30 },
+    { id: "5", goal: "Donate unused clothes", isChecked: false, points: 25 },
   ]);
 
   const [totalPoints, setTotalPoints] = React.useState(0);
@@ -50,7 +51,7 @@ const HomestayInformationFold = () => {
     <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 10 }}>
       <TouchableOpacity onPress={() => handleCheckBoxToggle(item.id)}>
         <Text style={{ fontSize: 20, marginRight: 10 }}>
-          {item.isChecked ? "✔️" : "🟢"} {/* Green circle instead of red */}
+          {item.isChecked ? <FontAwesome name="check" size={20} color="green" /> : <FontAwesome name="circle-o" size={20} color="green" />}
         </Text>
       </TouchableOpacity>
       <Text>{item.goal}</Text>
@@ -110,7 +111,7 @@ const HomestayInformationFold = () => {
             justifyContent: "center",
           }}
         >
-          <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}>Goals</Text>
+          <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}>Your sustainability Goals</Text>
           <FlatList
             data={goals}
             renderItem={renderGoalItem}
