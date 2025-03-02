@@ -48,9 +48,12 @@
     "@react-navigation/stack": "^7.1.1",
     "babel-plugin-module-resolver": "^5.0.2",
     "dotenv": "^16.4.7",
+    "expo-asset": "^11.0.4",
     "expo-constants": "^17.0.7",
+    "expo-image-picker": "~16.0.6",
     "expo-linking": "~7.0.3",
     "expo-location": "^18.0.7",
+    "expo-splash-screen": "^0.29.22",
     "expo-status-bar": "~2.0.0",
     "expo-updates": "~0.26.9",
     "lucide-react-native": "^0.445.0",
@@ -59,7 +62,6 @@
     "react-dom": "18.3.1",
     "react-native": "0.76.7",
     "react-native-dotenv": "^3.4.11",
-
     "react-native-geolocation-service": "^5.3.1",
     "react-native-gesture-handler": "^2.24.0",
     "react-native-maps": "^1.20.1",
@@ -69,12 +71,10 @@
     "react-native-screens": "^4.9.1",
     "react-native-svg": "^15.2.0",
     "react-native-tab-view": "^4.0.5",
-
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "~0.19.13",
     "serve": "^14.2.2",
-    "tailwindcss": "^3.4.15",
-    "expo-image-picker": "~16.0.6"
+    "tailwindcss": "^3.4.15"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

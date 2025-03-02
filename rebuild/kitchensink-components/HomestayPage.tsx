@@ -2,40 +2,25 @@ import React, { useEffect } from "react";
 import { StatusBar, Platform } from "react-native";
 import { Box } from "../components/ui";
 import MobileBottomTabs from "./MobileBottomTabs";
-import MobileModeChangeButton from "./MobileModeChangeButton";
 import {
-  Plus,
   Home,
   MessageCircle,
   User,
-  SlidersHorizontal,
+  Folder,
+  MapPin,
 } from "lucide-react-native";
 import MobileProfilePage from "./Profile";
 import Explorepage from "./ExplorePage";
 import Resources from "./Resources";
 import ChatBotScreen from "./ChatBotScreen";
 import Map from "./Map";
+
 const bottomTabs = [
-  {
-    icon: Home,
-    label: "Home",
-  },
-  {
-    icon: SlidersHorizontal,
-    label: "Resources",
-  },
-  {
-    icon: SlidersHorizontal,
-    label: "Map",
-  },
-  {
-    icon: User,
-    label: "Profile",
-  },
-  { 
-    icon: User, 
-    label: "Chat Bot" 
-  },
+  { icon: Home, label: "Home" },
+  { icon: MapPin, label: "Map" },
+  { icon: MessageCircle, label: "Chat Bot" },
+  { icon: Folder, label: "Resources" },
+  { icon: User, label: "Profile" },
 ];
 
 const HomestayPage = () => {
@@ -57,24 +42,23 @@ const HomestayPage = () => {
           {activeTab === "Profile" && <MobileProfilePage />}
           {activeTab === "Resources" && <Resources />}
           {activeTab === "Chat Bot" && <ChatBotScreen />}
-          {activeTab === "Map" && <Map/>} 
+          {activeTab === "Map" && <Map />}
           {activeTab === "Home" && <Explorepage setActiveTab={setActiveTab} activeTab={activeTab} />}
         </Box>
 
-
-        {/* go to MobileBottomTabs file to edit mobile bottom tabs ---------------------------*/}
+        {/* ✅ Bottom Tabs with Custom Icon Color */}
         <Box className="h-[72px] items-center w-full flex md:hidden border-t border-outline-50">
           <MobileBottomTabs
             activeTab={activeTab}
             setActiveTab={setActiveTab}
             bottomTabs={bottomTabs}
+            iconColor="#2c6e46" // ✅ Set icon color to #2c6e46
           />
         </Box>
-        {/* bottom tabs ends here---------------------- */}
 
       </Box>
-      {/* )} */}
     </>
   );
 };
+
 export default HomestayPage;

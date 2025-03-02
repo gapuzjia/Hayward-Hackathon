@@ -1,82 +1,79 @@
 import "./global.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { SafeAreaView, View, Image, StyleSheet, StatusBar, Platform } from "react-native";
+import { GluestackUIProvider } from "./components/ui";
+import { Asset } from "expo-asset";
 import HomestayPage from "./kitchensink-components/HomestayPage";
 import HomestayInformationFold from "./kitchensink-components/main-content/HomestayInformationFold";
 import RewardsScreen from "./kitchensink-components/main-content/Rewards";
-import Map from "./kitchensink-components/Map"; // ✅ Import Map screen
-import { SafeAreaView, GluestackUIProvider } from "./components/ui";
-import * as Linking from "expo-linking";
+import Map from "./kitchensink-components/Map";
 
-let defaultTheme: "dark" | "light" = "light";
-
-async function setDefaultTheme() {
-  const url = await Linking.getInitialURL();
-  if (url) {
-    let { queryParams } = Linking.parse(url) as any;
-    defaultTheme = queryParams?.iframeMode ?? defaultTheme;
-  }
-}
-setDefaultTheme();
-
-// Define Theme Context
-type ThemeContextType = {
-  colorMode?: "dark" | "light";
-  toggleColorMode?: () => void;
-};
-export const ThemeContext = React.createContext<ThemeContextType>({
+// ✅ Define Theme Context
+export const ThemeContext = React.createContext({
   colorMode: "light",
   toggleColorMode: () => {},
 });
 
-// Create a stack navigator
 const Stack = createStackNavigator();
 
 export default function App() {
-  const [colorMode, setColorMode] = React.useState<"dark" | "light">(defaultTheme);
+  const [colorMode, setColorMode] = useState("light");
+  const [headerImage, setHeaderImage] = useState(null);
 
-  const toggleColorMode = async () => {
+  const toggleColorMode = () => {
     setColorMode((prev) => (prev === "light" ? "dark" : "light"));
   };
 
+  useEffect(() => {
+    async function loadAssets() {
+      const imageAsset = require("./assets/header-logo.png");
+      await Asset.loadAsync(imageAsset);
+      setHeaderImage(imageAsset);
+    }
+    loadAssets();
+  }, []);
+
+  // ✅ Dynamic background based on theme
+  const backgroundColor = colorMode === "light" ? "#FFFFFF" : "#262626";
+
   return (
-    <>
-      {/* Top SafeAreaView */}
-      <SafeAreaView
-        className={`${colorMode === "light" ? "bg-[#E5E5E5]" : "bg-[#262626]"}`}
-      />
+    <ThemeContext.Provider value={{ colorMode, toggleColorMode }}>
+      <GluestackUIProvider>
+        {/* ✅ SafeAreaView to prevent covering the time/status bar */}
+        <SafeAreaView style={{ flex: 1, backgroundColor }}>
+          <NavigationContainer>
+            {/* ✅ Global Header */}
+            <View style={[styles.header, { backgroundColor }]}>
+              <StatusBar barStyle={colorMode === "light" ? "dark-content" : "light-content"} />
+              {headerImage && <Image source={headerImage} style={styles.headerImage} />}
+            </View>
 
-      <ThemeContext.Provider value={{ colorMode, toggleColorMode }}>
-        <GluestackUIProvider mode={colorMode}>
-          {/* Bottom SafeAreaView */}
-          <SafeAreaView
-            className={`${
-              colorMode === "light" ? "bg-white" : "bg-[#171717]"
-            } flex-1 overflow-hidden`}
-          >
-            {/* ✅ Navigation Container to enable navigation */}
-            <NavigationContainer>
-              <Stack.Navigator screenOptions={{ headerShown: false }}>
-                {/* ✅ Main page (shows HomestayPage inside) */}
-                <Stack.Screen name="Home">
-                  {() => (
-                    <HomestayPage>
-                      <HomestayInformationFold />
-                    </HomestayPage>
-                  )}
-                </Stack.Screen>
-
-                {/* ✅ Rewards page */}
-                <Stack.Screen name="RewardsScreen" component={RewardsScreen} />
-
-                {/* ✅ Added Map page */}
-                <Stack.Screen name="Map" component={Map} />
-              </Stack.Navigator>
-            </NavigationContainer>
-          </SafeAreaView>
-        </GluestackUIProvider>
-      </ThemeContext.Provider>
-    </>
+            <Stack.Navigator screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="Home" component={HomestayPage} />
+              <Stack.Screen name="RewardsScreen" component={RewardsScreen} />
+              <Stack.Screen name="Map" component={Map} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </SafeAreaView>
+      </GluestackUIProvider>
+    </ThemeContext.Provider>
   );
 }
+
+// ✅ Styles for Header
+const styles = StyleSheet.create({
+  header: {
+    width: "100%",
+    height: 80,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: Platform.OS === "ios" ? 40 : StatusBar.currentHeight, // ✅ Prevents covering status bar
+  },
+  headerImage: {
+    width: 150,
+    height: 50,
+    resizeMode: "contain",
+  },
+});

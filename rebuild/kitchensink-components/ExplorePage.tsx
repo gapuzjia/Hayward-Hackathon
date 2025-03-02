@@ -16,22 +16,7 @@ const Explorepage = ({ activeTab, setActiveTab }: any) => {
   const { colorMode } = useContext(ThemeContext);
   return (
     <>
-      {/*this is the search bar ---------------------*/}
-      <Box className={`w-full ${activeTab != "Profile" ? "flex" : "hidden"}`}>
-      <Box className="pt-4 pb-0 px-5 md:hidden w-full">
-          <Input variant="rounded" size="sm" className="w-full h-10">
-            <InputField placeholder="herro" />
-            <InputSlot className="bg-primary-500 rounded-full h-6 w-6 m-1.5">
-              <InputIcon
-                as={SearchIcon}
-                color={colorMode === "light" ? "#FEFEFF" : "#171717"}
-              />
-            </InputSlot>
-          </Input>
-        </Box>
-      </Box>
-      {/* end of search bar --------------------------*/}
-
+      
       {/* mobile */}
       <ScrollView
         className="h-[1px] md:hidden"
