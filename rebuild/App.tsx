@@ -8,7 +8,11 @@ import { Asset } from "expo-asset";
 import HomestayPage from "./kitchensink-components/HomestayPage";
 import HomestayInformationFold from "./kitchensink-components/main-content/HomestayInformationFold";
 import RewardsScreen from "./kitchensink-components/main-content/Rewards";
-import Map from "./kitchensink-components/Map";
+
+import Map from "./kitchensink-components/Map"; 
+import { SafeAreaView, GluestackUIProvider } from "./components/ui";
+import * as Linking from "expo-linking";
+
 
 // ✅ Define Theme Context
 export const ThemeContext = React.createContext({

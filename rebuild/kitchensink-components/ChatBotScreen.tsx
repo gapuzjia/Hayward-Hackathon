@@ -8,7 +8,12 @@ const ChatbotScreen = () => {
   const [messages, setMessages] = useState<{ role: string; content?: string; imageUri?: string }[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [selectedMode, setSelectedMode] = useState<"recycle" | "diy">("recycle"); // ✅ Default to Recycle Mode
+  const [selectedMode, setSelectedMode] = useState<"recycle" | "diy" | null>(null); // ✅ Default to no selection
+
+  // ✅ Function to handle mode selection
+  const handleModeSelection = (mode: "recycle" | "diy") => {
+    setSelectedMode(mode); // ✅ Save user selection
+  };
 
   // ✅ Function to pick an image from the gallery
   const pickImage = async () => {
@@ -35,10 +40,10 @@ const ChatbotScreen = () => {
     }
   };
 
-  // ✅ Function to send image to OpenAI for analysis
+  // ✅ Function to analyze an image (For Image Input)
   const analyzeImage = async (base64Image: string) => {
-    if (!base64Image) {
-      alert("Invalid image data. Please try again.");
+    if (!base64Image || !selectedMode) {
+      alert("Please select Recycle or DIY before sending.");
       return;
     }
 
@@ -96,12 +101,12 @@ const ChatbotScreen = () => {
     setLoading(false);
   };
 
-  // ✅ Function to send text messages
+  // ✅ Function to handle sending text input (For Text Messages)
   const sendMessage = async () => {
     if (!input.trim()) return; // ✅ Prevent empty messages
 
-    const userMessage = { role: "user", content: input.trim() || " " }; // ✅ Ensure content is always valid
-    setMessages((prevMessages) => [...prevMessages, userMessage]); // ✅ Keep all messages
+    const userMessage = { role: "user", content: input.trim() };
+    setMessages((prevMessages) => [...prevMessages, userMessage]);
     setInput("");
     setLoading(true);
 
@@ -140,7 +145,7 @@ const ChatbotScreen = () => {
         content: data.choices?.[0]?.message?.content?.trim() || "No response from AI.",
       };
 
-      setMessages((prevMessages) => [...prevMessages, botMessage]); // ✅ Keep all messages
+      setMessages((prevMessages) => [...prevMessages, botMessage]);
     } catch (error) {
       console.error("Caught Error:", error);
       alert("Error communicating with OpenAI. Please try again.");
@@ -151,36 +156,42 @@ const ChatbotScreen = () => {
 
   return (
     <Box className="flex-1 p-4">
-      <ScrollView className="flex-1 mb-4">
-        {messages.map((msg, index) => (
-          <View key={index} style={{ alignSelf: msg.role === "user" ? "flex-end" : "flex-start", marginBottom: 10 }}>
-            {msg.content && (
-              <Text style={{ fontWeight: msg.role === "user" ? "bold" : "normal", color: msg.role === "user" ? "blue" : "black" }}>
-                {msg.content}
-              </Text>
-            )}
-            {msg.imageUri && (
-              <Image source={{ uri: msg.imageUri }} style={{ width: 200, height: 200, borderRadius: 10, marginTop: 5 }} />
-            )}
-          </View>
-        ))}
-      </ScrollView>
+      {/* ✅ Centered Mode Selection (Appears First) */}
+      {selectedMode === null ? (
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <Text style={{ fontSize: 22, fontWeight: "bold", marginBottom: 20 }}>Select an Option</Text>
 
-      {loading && <ActivityIndicator size="large" color="#0000ff" />}
+          <TouchableOpacity onPress={() => handleModeSelection("recycle")} style={{ width: 250, height: 100, backgroundColor: "green", justifyContent: "center", alignItems: "center", borderRadius: 15, marginBottom: 15 }}>
+            <Text style={{ fontSize: 24, color: "white", fontWeight: "bold" }}>♻️ Recycle</Text>
+          </TouchableOpacity>
 
-      {/* ✅ Choice Buttons (Recycle vs DIY) */}
-      <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 10 }}>
-        <TouchableOpacity onPress={() => setSelectedMode("recycle")} style={{ padding: 10, backgroundColor: selectedMode === "recycle" ? "blue" : "gray", borderRadius: 5 }}>
-          <Text style={{ color: "white" }}>♻️ Recycle</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setSelectedMode("diy")} style={{ padding: 10, backgroundColor: selectedMode === "diy" ? "blue" : "gray", borderRadius: 5 }}>
-          <Text style={{ color: "white" }}>🛠️ DIY</Text>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity onPress={() => handleModeSelection("diy")} style={{ width: 250, height: 100, backgroundColor: "blue", justifyContent: "center", alignItems: "center", borderRadius: 15 }}>
+            <Text style={{ fontSize: 24, color: "white", fontWeight: "bold" }}>🛠️ DIY</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <>
+          <ScrollView className="flex-1 mb-4">
+            {messages.map((msg, index) => (
+              <View key={index} style={{ alignSelf: msg.role === "user" ? "flex-end" : "flex-start", marginBottom: 10 }}>
+                {msg.content && <Text style={{ fontWeight: "bold", color: msg.role === "user" ? "blue" : "black" }}>{msg.content}</Text>}
+                {msg.imageUri && <Image source={{ uri: msg.imageUri }} style={{ width: 200, height: 200, borderRadius: 10, marginTop: 5 }} />}
+              </View>
+            ))}
+          </ScrollView>
 
-      <TextInput placeholder="Enter an item or upload an image..." value={input} onChangeText={setInput} style={{ borderWidth: 1, padding: 10, borderRadius: 5, marginBottom: 10 }} />
-      <Button title="Send" onPress={sendMessage} disabled={loading} />
-      <Button title="Upload Image" onPress={pickImage} disabled={loading} />
+          <TextInput 
+            placeholder={selectedMode === "recycle" ? "Hi! What would you like to recycle today?" : "What item do you want to repurpose into something new?"} 
+            value={input} 
+            onChangeText={setInput} 
+            style={{ borderWidth: 1, padding: 10, borderRadius: 5, minHeight: 50, maxHeight: 80, textAlignVertical: "top" }} 
+            multiline={true} 
+            numberOfLines={3} 
+          />
+          <Button title="Send" onPress={sendMessage} disabled={loading} />
+          <Button title="Upload Image" onPress={pickImage} disabled={loading} />
+        </>
+      )}
     </Box>
   );
 };
