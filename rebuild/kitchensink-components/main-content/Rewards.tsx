@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   text: { fontSize: 22, fontWeight: 'bold', marginBottom: 20 },
   wheelContainer: { width: WHEEL_SIZE, height: WHEEL_SIZE, alignItems: 'center', justifyContent: 'center' },
   wheel: { position: 'absolute' },
-  button: { marginTop: 20, backgroundColor: '#0288D1', padding: 12, borderRadius: 10 },
+  button: { marginTop: 20, backgroundColor: '#2c6e46', padding: 12, borderRadius: 10 },
   buttonText: { color: 'white', fontSize: 18, fontWeight: 'bold' },
   resultText: { fontSize: 18, marginTop: 20, fontWeight: 'bold', color: '#333' },
 });
