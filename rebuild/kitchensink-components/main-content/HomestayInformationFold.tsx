@@ -1,356 +1,132 @@
 import React from "react";
-import {
-  Box,
-  HStack,
-  Icon,
-  Image,
-  Pressable,
-  Text,
-  VStack,
-  Tooltip,
-  TooltipContent,
-  TooltipText,
-  StarIcon,
-} from "../../components/ui";
-import { ChevronRight, Heart } from "lucide-react-native";
-import { AnimatePresence, Motion } from "@legendapp/motion";
-import { ScrollView } from "react-native";
+import { Box, HStack, Pressable, Text } from "../../components/ui";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { View, FlatList, TouchableOpacity } from "react-native";
 
-const tabsData = [
-  {
-    name: "herro",
-    data: [
-      {
-        title: "tropical card",
-        src: require("../../assets/display/image16.png"),
-        location: "401 Platte River Rd, Gothenburg, United States",
-        price: "$1,481",
-        rating: 4.9,
-      },
-      {
-        title: "Spinner Resort",
-        src: require("../../assets/display/image17.png"),
-        location: "1502 Silica Ave, Sacramento California",
-        price: "$1,381",
-        rating: 4.89,
-      },
-      {
-        title: "DropDown Den",
-        src: require("../../assets/display/image18.png"),
-        location: "2945 Entry Point Blvd, Kissimmee, Florida",
-        price: "$2,481",
-        rating: 4.6,
-      },
-    ],
-  },
-  {
-    name: "amazing views",
-    data: [
-      {
-        title: "amazing views card",
-        src: require("../../assets/display/image19.png"),
-        location: "401 Platte River Rd, Gothenburg, United States",
-        price: "$1,481",
-        rating: 4.9,
-      },
-      {
-        title: "Spinner Resort",
-        src: require("../../assets/display/image20.png"),
-        location: "1502 Silica Ave, Sacramento California",
-        price: "$1,381",
-        rating: 4.89,
-      },
-      {
-        title: "DropDown Den",
-        src: require("../../assets/display/image21.png"),
-        location: "2945 Entry Point Blvd, Kissimmee, Florida",
-        price: "$2,481",
-        rating: 4.6,
-      },
-    ],
-  },
-  {
-    name: "caves",
-    data: [
-      {
-        title: "caves card",
-        src: require("../../assets/display/image22.png"),
-        location: "401 Platte River Rd, Gothenburg, United States",
-        price: "$1,481",
-        rating: 4.9,
-      },
-      {
-        title: "Spinner Resort",
-        src: require("../../assets/display/image23.png"),
-        location: "1502 Silica Ave, Sacramento California",
-        price: "$1,381",
-        rating: 4.89,
-      },
-      {
-        title: "DropDown Den",
-        src: require("../../assets/display/image24.png"),
-        location: "2945 Entry Point Blvd, Kissimmee, Florida",
-        price: "$2,481",
-        rating: 4.6,
-      },
-    ],
-  },
-  {
-    name: "mansions",
-    data: [
-      {
-        title: "mansions card",
-        src: require("../../assets/display/image25.png"),
-        location: "401 Platte River Rd, Gothenburg, United States",
-        price: "$1,481",
-        rating: 4.9,
-      },
-      {
-        title: "Spinner Resort",
-        src: require("../../assets/display/image26.png"),
-        location: "1502 Silica Ave, Sacramento California",
-        price: "$1,381",
-        rating: 4.89,
-      },
-      {
-        title: "DropDown Den",
-        src: require("../../assets/display/image27.png"),
-        location: "2945 Entry Point Blvd, Kissimmee, Florida",
-        price: "$2,481",
-        rating: 4.6,
-      },
-    ],
-  },
-];
+// Define valid routes
+type RootStackParamList = {
+  Home: undefined;
+  RewardsScreen: undefined;
+};
 
 const tabs = [
-  {
-    title: "herro",
-  },
-  {
-    title: "Amazing views",
-  },
-  {
-    title: "Caves",
-  },
-  {
-    title: "Mansions",
-  },
+  { title: "Home", content: "" }, // Removed the content text here
+  { title: "Rewards", content: "Rewards Page Loading..." },
 ];
 
 const HomestayInformationFold = () => {
   const [activeTab, setActiveTab] = React.useState(tabs[0]);
+  const [goals, setGoals] = React.useState([
+    { id: "1", goal: "goal 1", isChecked: false, points: 10 },
+    { id: "2", goal: "goal 2", isChecked: false, points: 20 },
+    { id: "3", goal: "goal 3", isChecked: false, points: 15 },
+    { id: "4", goal: "goal 4", isChecked: false, points: 30 },
+    { id: "5", goal: "goal 5", isChecked: false, points: 25 },
+  ]);
+
+  const [totalPoints, setTotalPoints] = React.useState(0);
+
+  const handleCheckBoxToggle = (id: string) => {
+    setGoals((prevGoals) => {
+      const updatedGoals = prevGoals.map((goal) => {
+        if (goal.id === id) {
+          goal.isChecked = !goal.isChecked;
+          // Update total points based on the goal's points
+          if (goal.isChecked) {
+            setTotalPoints((prevTotal) => prevTotal + goal.points);
+          } else {
+            setTotalPoints((prevTotal) => prevTotal - goal.points);
+          }
+        }
+        return goal;
+      });
+      return updatedGoals;
+    });
+  };
+
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+  const renderGoalItem = ({ item }: { item: { id: string; goal: string; isChecked: boolean; points: number } }) => (
+    <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 10 }}>
+      <TouchableOpacity onPress={() => handleCheckBoxToggle(item.id)}>
+        <Text style={{ fontSize: 20, marginRight: 10 }}>
+          {item.isChecked ? "✔️" : "🟢"} {/* Green circle instead of red */}
+        </Text>
+      </TouchableOpacity>
+      <Text>{item.goal}</Text>
+    </View>
+  );
+
+  const renderItem = ({ item }: { item: string }) => (
+    <View style={{ flexDirection: "row", marginBottom: 10 }}>
+      <Text style={{ marginRight: 200, textDecorationLine: 'underline' }}>{item}</Text>
+      <Text>Icon</Text>
+    </View>
+  );
+
   return (
     <Box className="pb-8 px-4 md:px-0">
-      <HomestayInfoTabs
-        tabs={tabs}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-      />
-      <TabPanelData activeTab={activeTab} />
-    </Box>
-  );
-};
-
-const HomestayInfoTabs = ({ tabs, activeTab, setActiveTab }: any) => {
-  return (
-    <Box className="border-b border-outline-50 md:border-b-0 md:border-transparent">
-      <Box className="py-5">
-      <Box className="flex items-center justify-center w-full">
-        <HStack space="lg" className="mx-0.5 xl:gap-5 2xl:gap-6">
-
-          <HStack space="lg" className="mx-0.5 xl:gap-5 2xl:gap-6 justify-center">
-            {tabs.map((tab: any) => {
-              return (
-                <Pressable
-                  key={tab.title}
-                  className={`my-0.5 py-1 ${activeTab === tab ? "border-b-[3px]" : "border-b-0"
-                    } border-outline-900 hover:border-b-[3px] ${activeTab === tab
-                      ? "hover:border-outline-900"
-                      : "hover:border-outline-200"
-                    } `}
-                  onPress={() => setActiveTab(tab)}
-                >
-                  <Text
-                    size="sm"
-                    className={`${
-                      activeTab === tab
-                        ? "text-typography-900"
-                        : "text-typography-600"
-                    } font-medium`}
-                  >
-                    {tab.title}
-                  </Text>
-                </Pressable>
-              );
-            })}
-          </HStack>
+      {/* Tabs */}
+      <Box className="border-b border-outline-50">
+        <HStack space="lg" className="mx-0.5 xl:gap-5 2xl:gap-6 justify-center py-5">
+          {tabs.map((tab) => (
+            <Pressable
+              key={tab.title}
+              onPress={() => {
+                if (tab.title === "Rewards") {
+                  navigation.navigate("RewardsScreen"); // Navigate to Rewards screen
+                } else {
+                  setActiveTab(tab);
+                }
+              }}
+            >
+              <Text
+                size="sm"
+                className={`${
+                  activeTab.title === tab.title ? "text-typography-900" : "text-typography-600"
+                } font-medium`}
+              >
+                {tab.title}
+              </Text>
+            </Pressable>
+          ))}
         </HStack>
+      </Box>
+      
+      {/* Display Tab Content */}
+      <Box className="py-5 flex items-center justify-center">
+        <Text className="text-lg font-semibold">{activeTab.content}</Text>
+
+        {/* Goal Table */}
+        <Box
+          style={{
+            borderWidth: 1,
+            borderColor: "#ccc",
+            padding: 10,
+            marginTop: 10,
+            borderRadius: 8,
+            width: "90%", // Adjust width as needed
+            alignSelf: "center", // Centers the box
+            justifyContent: "center", // Centers the content vertically
+          }}
+        >
+          <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}>Goals</Text>
+          {/* FlatList for the goals */}
+          <FlatList
+            data={goals}
+            renderItem={renderGoalItem}
+            keyExtractor={(item) => item.id}
+          />
+        </Box>
+
+        {/* Point Accumulator */}
+        <Box style={{ marginTop: 20, alignItems: "center" }}>
+          <Text style={{ fontSize: 20, fontWeight: "bold" }}>Total Points: {totalPoints}</Text>
         </Box>
       </Box>
     </Box>
   );
 };
 
-const TabPanelData = ({ activeTab }: any) => {
-  const [likes, setLikes]: any = React.useState([]);
-
-  return (
-    <VStack className="justify-between lg:flex-row">
-      {tabsData.map((tab, index) => {
-        return (
-          <Box key={index} className="lg:flex-row">
-            {tab.name.toLowerCase() === activeTab.title.toLowerCase() &&
-              tab.data.map((image: any, index: any) => {
-                return (
-                  <Box
-                    key={index}
-                    className={`flex-1 my-2 lg:my-0 ${
-                      index === 0 ? "lg:ml-0" : "lg:ml-2"
-                    } ${index === tabsData.length - 1 ? "lg:mr-0" : "lg:mr-2"}`}
-                  >
-                    <Pressable className="w-full">
-                      {(props: any) => {
-                        return (
-                          <>
-                            <Box className="overflow-hidden rounded-md h-72">
-                              <Image
-                                source={image.src}
-                                className={`w-full h-72 ${
-                                  props.hovered
-                                    ? "scale-[1.04] opacity-90"
-                                    : "scale-100 opacity-100"
-                                }`}
-                                alt="Explore"
-                              />
-                            </Box>
-                            {props.hovered && (
-                              <Box className="absolute bg-[#181718] opacity-30 w-full h-full cursor-pointer" />
-                            )}
-                            <Box
-                              className={`absolute top-[45%] bg-transparent rounded border border-white self-center content-center py-1.5 px-4 flex-row ${
-                                props.hovered ? "flex" : "hidden"
-                              }`}
-                            >
-                              <Text className="text-white">Explore</Text>
-                              <Icon
-                                as={ChevronRight}
-                                size="sm"
-                                className="self-center"
-                                color="white"
-                              />
-                            </Box>
-                          </>
-                        );
-                      }}
-                    </Pressable>
-
-                    <Pressable
-                      onPress={() => {
-                        if (likes.includes(image.title)) {
-                          const newLikes = likes.filter(
-                            (like: any) => like !== image.title
-                          );
-                          setLikes(newLikes);
-                          return;
-                        } else {
-                          setLikes([...likes, image.title]);
-                        }
-                      }}
-                      className="absolute top-3 right-4 h-6 w-6 justify-center items-center"
-                    >
-                      <AnimatePresence>
-                        <Motion.View
-                          key={
-                            likes.includes(image.title) ? "liked" : "unliked"
-                          }
-                          initial={{
-                            scale: 1.3,
-                          }}
-                          animate={{
-                            scale: 1,
-                          }}
-                          exit={{
-                            scale: 0.9,
-                          }}
-                          transition={{
-                            type: "spring",
-                            mass: 0.9,
-                            damping: 9,
-                            stiffness: 300,
-                          }}
-                          style={{
-                            position: "absolute",
-                          }}
-                        >
-                          <Icon
-                            as={Heart}
-                            size="lg"
-                            className={`${
-                              likes.includes(image.title)
-                                ? "fill-red-500 stroke-red-500"
-                                : "fill-gray-500 stroke-white"
-                            }`}
-                          />
-                        </Motion.View>
-                      </AnimatePresence>
-                    </Pressable>
-
-                    <HStack className="justify-between py-2 items-start">
-                      <VStack space="sm" className="flex-1">
-                        <Text className="font-semibold text-typography-900">
-                          {image.title}
-                        </Text>
-                        <Text size="sm" className="text-typography-500">
-                          {image.location}
-                        </Text>
-                        <HStack>
-                          <Text
-                            size="sm"
-                            className="font-semibold text-typography-900"
-                          >
-                            {image.price}
-                          </Text>
-                          <Text size="sm" className="pl-1 text-typography-900">
-                            night
-                          </Text>
-                        </HStack>
-                      </VStack>
-                      <Tooltip
-                        trigger={(triggerProps: any) => {
-                          return (
-                            <Pressable {...triggerProps}>
-                              <HStack className="items-center flex-start">
-                                <Icon
-                                  as={StarIcon}
-                                  size="2xs"
-                                  className="stroke-typography-900 fill-typography-900"
-                                />
-                                <Text
-                                  size="sm"
-                                  className="pl-1 text-typography-900"
-                                >
-                                  {image.rating}
-                                </Text>
-                              </HStack>
-                            </Pressable>
-                          );
-                        }}
-                      >
-                        <TooltipContent>
-                          <TooltipText className="text-white px-2 py-1">
-                            Ratings
-                          </TooltipText>
-                        </TooltipContent>
-                      </Tooltip>
-                    </HStack>
-                  </Box>
-                );
-              })}
-          </Box>
-        );
-      })}
-    </VStack>
-  );
-};
 export default HomestayInformationFold;
