@@ -5,6 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import HomestayPage from "./kitchensink-components/HomestayPage";
 import HomestayInformationFold from "./kitchensink-components/main-content/HomestayInformationFold";
 import RewardsScreen from "./kitchensink-components/main-content/Rewards";
+import Map from "./kitchensink-components/Map"; // ✅ Import Map screen
 import { SafeAreaView, GluestackUIProvider } from "./components/ui";
 import * as Linking from "expo-linking";
 
@@ -18,8 +19,6 @@ async function setDefaultTheme() {
   }
 }
 setDefaultTheme();
-
-
 
 // Define Theme Context
 type ThemeContextType = {
@@ -70,6 +69,9 @@ export default function App() {
 
                 {/* ✅ Rewards page */}
                 <Stack.Screen name="RewardsScreen" component={RewardsScreen} />
+
+                {/* ✅ Added Map page */}
+                <Stack.Screen name="Map" component={Map} />
               </Stack.Navigator>
             </NavigationContainer>
           </SafeAreaView>

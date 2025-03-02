@@ -1,23 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { View, ActivityIndicator, Text, Modal, TouchableOpacity, Alert, ScrollView } from "react-native";
+import {
+  View,
+  ActivityIndicator,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 
-const GOOGLE_MAPS_API_KEY = "AIzaSyDjSMSEmtapgF2jkZpiooMv2UG7Nb9kM9Q"; // 🔥 Replace with your API Key
+const GOOGLE_MAPS_API_KEY = "AIzaSyDjSMSEmtapgF2jkZpiooMv2UG7Nb9kM9Q"; // Replace with your API Key
 
 const PLACE_TYPES = [
-  { type: "store", label: "Thrift Stores", color: "orange" }, // 🛍 Thrift stores
-  { type: "point_of_interest", label: "Recycling Centers", color: "green" }, // ♻️ Recycling centers
-  { type: "transit_station", label: "Public Transport", color: "blue" } // 🚉 Public transport
+  { type: "store", label: "Thrift Stores", color: "orange" },
+  { type: "point_of_interest", label: "Recycling Centers", color: "green" },
+  { type: "transit_station", label: "Public Transport", color: "blue" }
 ];
 
 const Map = () => {
   const [loading, setLoading] = useState(true);
   const [location, setLocation] = useState<Location.LocationObjectCoords | null>(null);
   const [places, setPlaces] = useState([]);
-  const [selectedMarker, setSelectedMarker] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState("all"); // 🔥 Default: Show all
-  const [filterModalVisible, setFilterModalVisible] = useState(false); // 🔥 Controls the filter popup
+  const [filteredPlaces, setFilteredPlaces] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -35,6 +41,7 @@ const Map = () => {
     })();
   }, []);
 
+  // 🔥 Fetch nearby places (thrift stores, recycling centers, public transport)
   const fetchNearbyPlaces = async (lat, lng) => {
     try {
       let allPlaces = [];
@@ -49,29 +56,72 @@ const Map = () => {
         }
 
         if (json.results) {
-          const placesWithType = json.results.map((place) => ({
-            id: place.place_id,
-            latitude: place.geometry.location.lat,
-            longitude: place.geometry.location.lng,
-            title: place.name,
-            category: placeType.label, // 🔥 Store readable category name
-            pinColor: placeType.color,
-            address: place.vicinity || "No Address Provided",
-            type: placeType.type // 🔥 Store type for filtering
-          }));
-          allPlaces = [...allPlaces, ...placesWithType];
+          // 🔥 Fetch ZIP codes for each place using Google Geocoding API
+          const placesWithZip = await Promise.all(
+            json.results.map(async (place) => {
+              const zipCode = await fetchZipFromLatLng(
+                place.geometry.location.lat,
+                place.geometry.location.lng
+              );
+
+              return {
+                id: place.place_id,
+                latitude: place.geometry.location.lat,
+                longitude: place.geometry.location.lng,
+                title: place.name,
+                category: placeType.label,
+                pinColor: placeType.color,
+                address: place.vicinity || "No Address Provided",
+                zipCode: zipCode, // 🔥 Store the correct ZIP code
+              };
+            })
+          );
+
+          allPlaces = [...allPlaces, ...placesWithZip];
         }
       }
       setPlaces(allPlaces);
+      setFilteredPlaces(allPlaces); // Show all places initially
     } catch (error) {
       console.error("Error fetching places:", error);
     }
   };
 
-  // 🔥 Filter places based on selected category
-  const filteredPlaces = selectedCategory === "all" 
-    ? places 
-    : places.filter(place => place.type === selectedCategory);
+  // 🔥 Fetch ZIP Code using Google Geocoding API
+  const fetchZipFromLatLng = async (lat, lng) => {
+    try {
+      const geoUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_MAPS_API_KEY}`;
+      const geoResponse = await fetch(geoUrl);
+      const geoData = await geoResponse.json();
+
+      if (geoData.status === "OK" && geoData.results.length > 0) {
+        for (const component of geoData.results[0].address_components) {
+          if (component.types.includes("postal_code")) {
+            return component.long_name; // ✅ Correct ZIP code
+          }
+        }
+      }
+      return null;
+    } catch (error) {
+      console.error("Error fetching ZIP code:", error);
+      return null;
+    }
+  };
+
+  // 🔥 Filter places based on searched ZIP code
+  const filterPlacesByZip = () => {
+    if (!/^\d{5}$/.test(searchInput)) {
+      Alert.alert("Invalid ZIP Code", "Please enter a valid 5-digit ZIP code.");
+      return;
+    }
+
+    const filtered = places.filter((place) => place.zipCode === searchInput);
+    if (filtered.length === 0) {
+      Alert.alert("No Places Found", `No places found in ZIP code ${searchInput}.`);
+    }
+
+    setFilteredPlaces(filtered);
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -79,120 +129,57 @@ const Map = () => {
         <ActivityIndicator size="large" color="blue" style={{ marginTop: 50 }} />
       ) : (
         <>
-          {/* 🔥 Button to Open Filter Modal */}
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#007AFF",
-              padding: 12,
-              borderRadius: 8,
-              alignItems: "center",
-              margin: 10
-            }}
-            onPress={() => setFilterModalVisible(true)}
-          >
-            <Text style={{ color: "white", fontWeight: "bold", fontSize: 16 }}>
-              Select Category
-            </Text>
-          </TouchableOpacity>
+          {/* 🔥 Search Bar */}
+          <View style={{ padding: 10, backgroundColor: "white", flexDirection: "row", alignItems: "center" }}>
+            <TextInput
+              style={{
+                flex: 1,
+                height: 40,
+                borderColor: "#ccc",
+                borderWidth: 1,
+                borderRadius: 8,
+                paddingHorizontal: 10
+              }}
+              placeholder="Enter ZIP Code"
+              value={searchInput}
+              onChangeText={setSearchInput}
+              keyboardType="numeric"
+              onSubmitEditing={filterPlacesByZip}
+            />
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#007AFF",
+                padding: 10,
+                borderRadius: 8,
+                marginLeft: 10
+              }}
+              onPress={filterPlacesByZip}
+            >
+              <Text style={{ color: "white", fontWeight: "bold" }}>Search</Text>
+            </TouchableOpacity>
+          </View>
 
+          {/* 🔥 Map View */}
           <MapView
             style={{ flex: 1 }}
-            initialRegion={{
+            region={{
               latitude: location?.latitude || 37.7749,
               longitude: location?.longitude || -122.4194,
               latitudeDelta: 0.1,
               longitudeDelta: 0.1,
             }}
           >
-            {location && (
-              <Marker
-                coordinate={{ latitude: location.latitude, longitude: location.longitude }}
-                title="You Are Here"
-                pinColor="red"
-              />
-            )}
-
-            {/* 📌 Filtered Markers */}
+            {/* 📌 Place Markers (Only show filtered places) */}
             {filteredPlaces.map((place) => (
               <Marker
                 key={place.id}
                 coordinate={{ latitude: place.latitude, longitude: place.longitude }}
                 title={place.title}
-                description={place.address}
+                description={`${place.address} (ZIP: ${place.zipCode})`}
                 pinColor={place.pinColor}
-                onPress={() => setSelectedMarker(place)} // ✅ Opens popup
               />
             ))}
           </MapView>
-
-          {/* 🔥 Filter Popup Modal */}
-          <Modal
-            transparent={true}
-            animationType="fade"
-            visible={filterModalVisible}
-            onRequestClose={() => setFilterModalVisible(false)}
-          >
-            <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0,0,0,0.5)" }}>
-              <View style={{ backgroundColor: "white", padding: 20, borderRadius: 10, width: 300, alignItems: "center" }}>
-                <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}>Select Category</Text>
-
-                {/* 🔥 Scrollable Category List */}
-                <ScrollView style={{ width: "100%" }}>
-                  <TouchableOpacity
-                    style={{ padding: 10, borderBottomWidth: 1, width: "100%", alignItems: "center" }}
-                    onPress={() => {
-                      setSelectedCategory("all");
-                      setFilterModalVisible(false);
-                    }}
-                  >
-                    <Text style={{ fontSize: 18 }}>Show All</Text>
-                  </TouchableOpacity>
-
-                  {PLACE_TYPES.map((placeType) => (
-                    <TouchableOpacity
-                      key={placeType.type}
-                      style={{ padding: 10, borderBottomWidth: 1, width: "100%", alignItems: "center" }}
-                      onPress={() => {
-                        setSelectedCategory(placeType.type);
-                        setFilterModalVisible(false);
-                      }}
-                    >
-                      <Text style={{ fontSize: 18 }}>{placeType.label}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </ScrollView>
-
-                {/* 🔥 Close Button */}
-                <TouchableOpacity
-                  onPress={() => setFilterModalVisible(false)}
-                  style={{ marginTop: 15, padding: 10, backgroundColor: "red", borderRadius: 5 }}
-                >
-                  <Text style={{ color: "white", fontWeight: "bold" }}>Cancel</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
-
-          {/* 🔥 Popup Modal When Clicking a Pin */}
-          {selectedMarker && (
-            <Modal
-              transparent={true}
-              animationType="slide"
-              visible={!!selectedMarker}
-              onRequestClose={() => setSelectedMarker(null)}
-            >
-              <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0,0,0,0.5)" }}>
-                <View style={{ backgroundColor: "white", padding: 20, borderRadius: 10, width: 300, alignItems: "center" }}>
-                  <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}>{selectedMarker.title}</Text>
-                  <Text style={{ fontSize: 16, color: "gray", marginBottom: 5 }}>{selectedMarker.category}</Text>
-                  <Text style={{ fontSize: 14, color: "black", textAlign: "center" }}>{selectedMarker.address}</Text>
-                  <TouchableOpacity onPress={() => setSelectedMarker(null)} style={{ marginTop: 15, padding: 10, backgroundColor: "blue", borderRadius: 5 }}>
-                    <Text style={{ color: "white", fontWeight: "bold" }}>Close</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </Modal>
-          )}
         </>
       )}
     </View>
