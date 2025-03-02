@@ -60,15 +60,15 @@ const ProfileCard = () => {
     <HStack className="justify-between items-center">
       <HStack space="md">
         <Avatar className="bg-primary-500">
-          <AvatarFallbackText>Henry Stan</AvatarFallbackText>
+          <AvatarFallbackText>John Doe</AvatarFallbackText>
           <AvatarImage
             source={{
-              uri: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=800&q=60",
+              uri: "https://i1.sndcdn.com/avatars-000207509058-f75bdg-t500x500.jpg",
             }}
           />
         </Avatar>
         <VStack>
-          <Text>Henry Stan</Text>
+          <Text>John Doe</Text>
           <Link>
             <LinkText
               size="sm"
