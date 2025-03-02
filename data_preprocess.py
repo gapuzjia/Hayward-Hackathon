@@ -2,7 +2,7 @@ import requests
 import csv
 
 # 🔑 Replace with your Google API Key
-API_KEY = "AIzaSyCGCMMpkbGj5PtTvU1OcdxP8bXOfHXqJZ8"
+API_KEY = "AIzaSyD-_jPIjy2K2I6N-MKVmCqssrTLlI0gyi4"
 
 # 🌍 Set the location (latitude & longitude) and radius (in meters)
 LOCATION = "37.65498744801002,-122.05471139716227"  # Example: Near San Francisco
