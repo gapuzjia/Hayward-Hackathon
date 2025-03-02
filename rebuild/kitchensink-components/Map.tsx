@@ -2,6 +2,12 @@ import React, { useEffect, useState } from "react";
 import { View, ActivityIndicator, Text } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
+import MarkerSVG from "./assets/marker.svg"; // ✅ Import your SVG file
+
+const LOCATIONS = [
+  { id: 1, latitude: 37.7668, longitude: -122.4295, title: "Goodwill Donation Center", category: "Thrift Store" },
+  { id: 2, latitude: 37.7813, longitude: -122.4622, title: "Salvation Army Thrift Store", category: "Thrift Store" },
+];
 
 const Map = () => {
   const [loading, setLoading] = useState(true);
@@ -17,6 +23,7 @@ const Map = () => {
       }
 
       let userLocation = await Location.getCurrentPositionAsync({});
+      console.log("User Location:", userLocation.coords);
       setLocation(userLocation.coords);
       setLoading(false);
     })();
@@ -26,27 +33,25 @@ const Map = () => {
     <View style={{ flex: 1 }}>
       {loading ? (
         <ActivityIndicator size="large" color="blue" style={{ marginTop: 50 }} />
-      ) : location ? (
+      ) : (
         <MapView
           style={{ flex: 1 }}
           initialRegion={{
-            latitude: location.latitude,
-            longitude: location.longitude,
-            latitudeDelta: 0.05,
-            longitudeDelta: 0.05,
+            latitude: location?.latitude || 37.7749,
+            longitude: location?.longitude || -122.4194,
+            latitudeDelta: 0.5,
+            longitudeDelta: 0.5,
           }}
         >
-          {/* User Location Marker */}
-          <Marker
-            coordinate={{ latitude: location.latitude, longitude: location.longitude }}
-            title="You are here"
-            pinColor="red"
-          />
+          {/* CSV Data Markers with SVG Icon */}
+          {LOCATIONS.map((place) => (
+            <Marker key={place.id} coordinate={{ latitude: place.latitude, longitude: place.longitude }} title={place.title} description={place.category}>
+              <View>
+                <MarkerSVG width={40} height={40} /> {/* ✅ Use your SVG as the marker */}
+              </View>
+            </Marker>
+          ))}
         </MapView>
-      ) : (
-        <Text style={{ textAlign: "center", marginTop: 50 }}>
-          Location access denied.
-        </Text>
       )}
     </View>
   );
