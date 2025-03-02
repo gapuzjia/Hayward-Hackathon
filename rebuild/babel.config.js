@@ -6,6 +6,7 @@ module.exports = function (api) {
       'nativewind/babel'
     ],
     plugins: [
+      ["module:react-native-dotenv"],
       ["module-resolver", {
         root: ["./"],
         alias: {
@@ -13,7 +14,7 @@ module.exports = function (api) {
           "tailwind.config": "./tailwind.config.js"
         }
       }],
-      ["module:react-native-dotenv"] 
+      "react-native-reanimated/plugin"  // ✅ Must be the last plugin
     ]
   };
 };
