@@ -37,7 +37,7 @@ Alternatively, run on an emulator (Android Studio/iOS Simulator).
 👥 Contributors
 Thanks to everyone who has contributed to Upcycle! 🎉
 
-👤 Jianna Gapuz – Team Lead & Head Deeveloper
-👤 Saul Medina
-👤 Michelle Lappin
-👤 Gabriel Martinez
+👤 Jianna Gapuz – Team Lead & Head Deeveloper\
+👤 Saul Medina\
+👤 Michelle Lappin\
+👤 Gabriel Martinez\
