@@ -11,7 +11,7 @@ import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { Ionicons } from "@expo/vector-icons"; // ✅ Import filter icon
 
-const GOOGLE_MAPS_API_KEY = "AIzaSyDjSMSEmtapgF2jkZpiooMv2UG7Nb9kM9Q"; // Replace with your API Key
+const GOOGLE_MAPS_API_KEY = ""; // Replace with your API Key
 
 // ✅ More specific Google Places API types
 const PLACE_TYPES = [
