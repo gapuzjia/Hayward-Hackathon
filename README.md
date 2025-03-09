@@ -2,11 +2,8 @@
 A sustainability app that rewards eco-friendly choices!
 ![3](https://github.com/user-attachments/assets/566f41fc-79a2-45ab-8e62-2be873c014fc)
 
-
 # 🌍 About Upcycle
 Upcycle is a mobile app that makes sustainability easy and rewarding! Earn points and incentives for eco-friendly actions like taking public transportation, upcycling items, and reducing waste.
-
-🔹 New! AI Chatbot 🤖 – Need help figuring out how to recycle or upcycle something? Simply upload an image or type in an object, and the AI will provide recycling tips or creative upcycling ideas!
 
 # 🚀 Features
 ✅ Track Sustainability Actions – Log activities like using public transport, repurposing items, and more!
