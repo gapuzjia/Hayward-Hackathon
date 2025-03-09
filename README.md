@@ -40,4 +40,4 @@ Thanks to everyone who has contributed to Upcycle! 🎉
 👤 Jianna Gapuz – Team Lead & Head Deeveloper\
 👤 Saul Medina\
 👤 Michelle Lappin\
-👤 Gabriel Martinez\
+👤 Gabriel Martinez
